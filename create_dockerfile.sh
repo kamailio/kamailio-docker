@@ -17,8 +17,6 @@ MAINTAINER Victor Seva <linuxmaniac@torreviejawireless.org>
 # old cached versions when the Dockerfile is built.
 ENV REFRESHED_AT ${DATE}
 
-RUN rm -rf /var/lib/apt/lists/* && apt-get update && \
-  apt-get install --assume-yes gnupg wget
 EOF
 
 if [ -n "${archived}" ] ; then
@@ -35,6 +33,8 @@ cat >>"${DOCKERFILE}" <<EOF
 # avoid httpredir errors
 RUN sed -i 's/httpredir/deb/g' /etc/apt/sources.list
 
+RUN rm -rf /var/lib/apt/lists/* && apt-get update && \
+  apt-get install --assume-yes gnupg wget
 EOF
 fi
 cat >>"${DOCKERFILE}" <<EOF
