@@ -8,7 +8,7 @@ MAINTAINER Victor Seva <linuxmaniac@torreviejawireless.org>
 # old cached versions when the Dockerfile is built.
 ENV REFRESHED_AT 2017-10-19
 
-RUN rm -rf /var/lib/apt/lists/* && apt-get update &&   apt-get install --assume-yes gpg wget
+RUN rm -rf /var/lib/apt/lists/* && apt-get update &&   apt-get install --assume-yes gnupg wget
 # avoid httpredir errors
 RUN sed -i 's/httpredir/deb/g' /etc/apt/sources.list
 
