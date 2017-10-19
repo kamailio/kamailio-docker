@@ -18,7 +18,7 @@ MAINTAINER Victor Seva <linuxmaniac@torreviejawireless.org>
 ENV REFRESHED_AT ${DATE}
 
 RUN rm -rf /var/lib/apt/lists/* && apt-get update && \
-  apt-get install --assume-yes gpg wget
+  apt-get install --assume-yes gnupg wget
 EOF
 
 if [ -n "${archived}" ] ; then
