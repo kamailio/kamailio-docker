@@ -33,11 +33,11 @@ cat >>"${DOCKERFILE}" <<EOF
 # avoid httpredir errors
 RUN sed -i 's/httpredir/deb/g' /etc/apt/sources.list
 
-RUN rm -rf /var/lib/apt/lists/* && apt-get update && \
-  apt-get install --assume-yes gnupg wget
 EOF
 fi
 cat >>"${DOCKERFILE}" <<EOF
+RUN rm -rf /var/lib/apt/lists/* && apt-get update && \
+  apt-get install --assume-yes gnupg wget
 # kamailio repo
 RUN echo "deb http://deb.kamailio.org/kamailio${kam_version} ${dist} main" > \
   /etc/apt/sources.list.d/kamailio.list
