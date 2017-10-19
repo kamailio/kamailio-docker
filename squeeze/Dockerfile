@@ -8,7 +8,6 @@ MAINTAINER Victor Seva <linuxmaniac@torreviejawireless.org>
 # old cached versions when the Dockerfile is built.
 ENV REFRESHED_AT 2017-10-19
 
-RUN rm -rf /var/lib/apt/lists/* && apt-get update &&   apt-get install --assume-yes gnupg wget
 RUN echo "deb http://archive.debian.org/debian squeeze main" >   /etc/apt/sources.list;   echo "deb http://archive.debian.org/debian squeeze-lts main" >>     /etc/apt/sources.list ;   echo "Acquire::Check-Valid-Until false;" >> /etc/apt/apt.conf
 
 # kamailio repo
