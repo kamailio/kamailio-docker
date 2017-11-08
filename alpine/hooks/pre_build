@@ -11,4 +11,5 @@ if [ ! -z "$GIT_TAG" ];then
 fi
 
 docker run --volume=`pwd`/../../..:/usr/src/kamailio --volume=`pwd`/build.sh:/build.sh --entrypoint=/build.sh $ENV_OPT alpine:edge
+
 exit $?

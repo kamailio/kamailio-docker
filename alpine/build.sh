@@ -9,7 +9,7 @@ TMP_TAR=/tmp/kamailio_min.tar.gz
 IMG_TAR=kamailio_img.tar.gz
 
 prepare_build() {
-apk add --no-cache abuild git gcc build-base bison db-dev flex expat-dev perl-dev postgresql-dev python2-dev pcre-dev mariadb-dev \
+apk add --no-cache abuild git gcc build-base bison db-dev gawk flex expat-dev perl-dev postgresql-dev python2-dev pcre-dev mariadb-dev \
     libxml2-dev curl-dev unixodbc-dev confuse-dev ncurses-dev sqlite-dev lua-dev openldap-dev \
     libressl-dev net-snmp-dev libuuid libev-dev jansson-dev json-c-dev libevent-dev linux-headers \
     libmemcached-dev rabbitmq-c-dev hiredis-dev libmaxminddb-dev libunistring-dev freeradius-client-dev lksctp-tools-dev
@@ -38,7 +38,7 @@ build_and_install(){
 }
 
 list_installed_kamailio_packages() {
-	apk info | grep kamailio
+    apk info | grep kamailio
 }
 
 kamailio_files() {
@@ -58,6 +58,7 @@ extra_files() {
 /bin
 /bin/busybox
 /usr/bin
+/usr/bin/awk
 /usr/bin/dumpcap
 /usr/lib
 /usr/sbin
@@ -130,6 +131,10 @@ make_image_tar() {
     tar czf /usr/src/kamailio/pkg/docker/alpine/$IMG_TAR *
 }
 
+create_apk_dir() {
+    mv /home/build/packages/kamailio /usr/src/kamailio/pkg/docker/alpine/apk_files
+}
+
 prepare_build
 build_and_install
 #install PCAP tools
@@ -142,3 +147,4 @@ filter_unnecessary_files
 find_binaries
 tar_files
 make_image_tar
+create_apk_dir
