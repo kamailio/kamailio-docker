@@ -1,0 +1,25 @@
+#!/bin/bash
+
+IMAGE_NAME="${IMAGE_NAME:-kamailio:master-alpine}"
+
+init_local_repo() {
+    docker network create kamailio-build
+    docker run --network kamailio-build --name local-repo --hostname local-repo --volume=`pwd`/apk_files:/usr/share/nginx/html:ro -d nginx
+}
+
+build_images() {
+    docker build --no-cache -t $IMAGE_NAME .
+    docker build --no-cache -t $IMAGE_NAME.debug --network kamailio-build -f Dockerfile.debug .
+}
+
+build_cleanup() {
+    docker stop local-repo
+    docker rm local-repo
+    docker network rm kamailio-build
+    rm -Rf apk_files
+}
+
+init_local_repo
+build_images
+build_cleanup
+exit 0
