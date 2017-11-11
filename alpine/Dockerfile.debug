@@ -1,0 +1,9 @@
+FROM alpine:edge
+
+RUN apk --no-cache add gawk gdb strace mariadb-client postgresql-client; \
+    apk --no-cache --allow-untrusted --repository http://local-repo search search -qe 'kamailio*' | \
+        xargs apk --no-cache --allow-untrusted --repository http://local-repo add; \
+    mkdir /var/lib/coredump; \
+    echo "kernel.core_pattern=/var/lib/coredump/core.%e.%p.%h.%t" > /etc/sysctl.d/00-core.conf
+
+ENTRYPOINT ["kamailio", "-DD", "-E"]
