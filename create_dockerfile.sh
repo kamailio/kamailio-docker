@@ -58,7 +58,7 @@ EOF
 }
 
 dist=${1:-stretch}
-version=${2:-5.0.3}
+version=${2:-5.0.5}
 DATE=$(date --rfc-3339=date)
 
 case ${dist} in
