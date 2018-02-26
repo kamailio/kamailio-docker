@@ -1,8 +1,7 @@
 #!/bin/bash
 kam_packages() {
-  # we have a dependency problem on db5.1-util so do not install berkeley modules for now
   wget -O- "http://deb.kamailio.org/kamailio${kam_version}/dists/${dist}/main/binary-amd64/Packages" | \
-    awk -vver="${version}+${dist}" '/Package:/ { print $2"="ver}' | grep -v berkeley | xargs
+    awk -vver="${version}+${dist}" '/Package:/ { print $2"="ver}' | xargs
 }
 
 create_dockerfile() {
@@ -63,7 +62,7 @@ DATE=$(date --rfc-3339=date)
 
 case ${dist} in
   xenial|trusty|precise) base=ubuntu ;;
-  squeeze|wheezy|jessie|stretch) base=debian ;;
+  squeeze|wheezy|jessie|stretch|buster) base=debian ;;
   *)
     echo "ERROR: no ${dist} base supported"
     exit 1
@@ -75,6 +74,10 @@ case ${dist} in
 esac
 
 case ${version} in
+  5\.1*)
+    echo "5.1 series"
+    kam_version="51"
+    ;;
   5\.0*)
     echo "5.0 series"
     kam_version="50"
