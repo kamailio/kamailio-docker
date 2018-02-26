@@ -1,4 +1,4 @@
-DISTS:=buster jessie wheezy precise trusty xenial
+DISTS:=buster jessie stretch wheezy precise trusty xenial
 VERSION:=5.1.1
 
 all: clean
