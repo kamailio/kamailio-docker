@@ -1,5 +1,5 @@
 DISTS:=jessie wheezy squeeze precise trusty xenial
-VERSION:=4.4.6
+VERSION:=4.4.7
 
 all: clean
 	for i in $(DISTS) ; do \
