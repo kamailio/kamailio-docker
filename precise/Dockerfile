@@ -6,14 +6,14 @@ MAINTAINER Victor Seva <linuxmaniac@torreviejawireless.org>
 # is updated with the current date. It will force refresh of all
 # of the base images and things like 'apt-get update' won't be using
 # old cached versions when the Dockerfile is built.
-ENV REFRESHED_AT 2018-03-07
+ENV REFRESHED_AT 2018-04-25
 
 RUN rm -rf /var/lib/apt/lists/* && apt-get update &&   apt-get install --assume-yes gnupg wget
 # kamailio repo
 RUN echo "deb http://deb.kamailio.org/kamailio51 precise main" >   /etc/apt/sources.list.d/kamailio.list
 RUN wget -O- http://deb.kamailio.org/kamailiodebkey.gpg | apt-key add -
 
-RUN apt-get update && apt-get install --assume-yes kamailio=5.1.2+precise kamailio-autheph-modules=5.1.2+precise kamailio-berkeley-bin=5.1.2+precise kamailio-berkeley-modules=5.1.2+precise kamailio-carrierroute-modules=5.1.2+precise kamailio-cpl-modules=5.1.2+precise kamailio-dbg=5.1.2+precise kamailio-erlang-modules=5.1.2+precise kamailio-extra-modules=5.1.2+precise kamailio-geoip-modules=5.1.2+precise kamailio-ims-modules=5.1.2+precise kamailio-java-modules=5.1.2+precise kamailio-json-modules=5.1.2+precise kamailio-ldap-modules=5.1.2+precise kamailio-lua-modules=5.1.2+precise kamailio-memcached-modules=5.1.2+precise kamailio-mono-modules=5.1.2+precise kamailio-mysql-modules=5.1.2+precise kamailio-nth=5.1.2+precise kamailio-outbound-modules=5.1.2+precise kamailio-perl-modules=5.1.2+precise kamailio-postgres-modules=5.1.2+precise kamailio-presence-modules=5.1.2+precise kamailio-python-modules=5.1.2+precise kamailio-radius-modules=5.1.2+precise kamailio-redis-modules=5.1.2+precise kamailio-sctp-modules=5.1.2+precise kamailio-snmpstats-modules=5.1.2+precise kamailio-sqlite-modules=5.1.2+precise kamailio-tls-modules=5.1.2+precise kamailio-unixodbc-modules=5.1.2+precise kamailio-utils-modules=5.1.2+precise kamailio-websocket-modules=5.1.2+precise kamailio-xml-modules=5.1.2+precise kamailio-xmpp-modules=5.1.2+precise
+RUN apt-get update && apt-get install --assume-yes kamailio=5.1.3+precise kamailio-autheph-modules=5.1.3+precise kamailio-berkeley-bin=5.1.3+precise kamailio-berkeley-modules=5.1.3+precise kamailio-carrierroute-modules=5.1.3+precise kamailio-cpl-modules=5.1.3+precise kamailio-dbg=5.1.3+precise kamailio-erlang-modules=5.1.3+precise kamailio-extra-modules=5.1.3+precise kamailio-geoip-modules=5.1.3+precise kamailio-ims-modules=5.1.3+precise kamailio-java-modules=5.1.3+precise kamailio-json-modules=5.1.3+precise kamailio-ldap-modules=5.1.3+precise kamailio-lua-modules=5.1.3+precise kamailio-memcached-modules=5.1.3+precise kamailio-mono-modules=5.1.3+precise kamailio-mysql-modules=5.1.3+precise kamailio-nth=5.1.3+precise kamailio-outbound-modules=5.1.3+precise kamailio-perl-modules=5.1.3+precise kamailio-postgres-modules=5.1.3+precise kamailio-presence-modules=5.1.3+precise kamailio-python-modules=5.1.3+precise kamailio-radius-modules=5.1.3+precise kamailio-redis-modules=5.1.3+precise kamailio-sctp-modules=5.1.3+precise kamailio-snmpstats-modules=5.1.3+precise kamailio-sqlite-modules=5.1.3+precise kamailio-tls-modules=5.1.3+precise kamailio-unixodbc-modules=5.1.3+precise kamailio-utils-modules=5.1.3+precise kamailio-websocket-modules=5.1.3+precise kamailio-xml-modules=5.1.3+precise kamailio-xmpp-modules=5.1.3+precise
 
 VOLUME /etc/kamailio
 
