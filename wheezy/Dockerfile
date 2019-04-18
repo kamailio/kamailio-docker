@@ -6,7 +6,7 @@ MAINTAINER Victor Seva <linuxmaniac@torreviejawireless.org>
 # is updated with the current date. It will force refresh of all
 # of the base images and things like 'apt-get update' won't be using
 # old cached versions when the Dockerfile is built.
-ENV REFRESHED_AT 2018-10-08
+ENV REFRESHED_AT 2019-04-18
 
 # avoid httpredir errors
 RUN sed -i 's/httpredir/deb/g' /etc/apt/sources.list
@@ -16,7 +16,7 @@ RUN rm -rf /var/lib/apt/lists/* && apt-get update &&   apt-get install --assume-
 RUN echo "deb http://deb.kamailio.org/kamailio51 wheezy main" >   /etc/apt/sources.list.d/kamailio.list
 RUN wget -O- http://deb.kamailio.org/kamailiodebkey.gpg | apt-key add -
 
-RUN apt-get update && apt-get install --assume-yes kamailio=5.1.6+wheezy kamailio-autheph-modules=5.1.6+wheezy kamailio-berkeley-bin=5.1.6+wheezy kamailio-berkeley-modules=5.1.6+wheezy kamailio-carrierroute-modules=5.1.6+wheezy kamailio-cpl-modules=5.1.6+wheezy kamailio-dbg=5.1.6+wheezy kamailio-erlang-modules=5.1.6+wheezy kamailio-extra-modules=5.1.6+wheezy kamailio-geoip-modules=5.1.6+wheezy kamailio-ims-modules=5.1.6+wheezy kamailio-java-modules=5.1.6+wheezy kamailio-json-modules=5.1.6+wheezy kamailio-ldap-modules=5.1.6+wheezy kamailio-lua-modules=5.1.6+wheezy kamailio-memcached-modules=5.1.6+wheezy kamailio-mono-modules=5.1.6+wheezy kamailio-mysql-modules=5.1.6+wheezy kamailio-nth=5.1.6+wheezy kamailio-outbound-modules=5.1.6+wheezy kamailio-perl-modules=5.1.6+wheezy kamailio-postgres-modules=5.1.6+wheezy kamailio-presence-modules=5.1.6+wheezy kamailio-python-modules=5.1.6+wheezy kamailio-radius-modules=5.1.6+wheezy kamailio-redis-modules=5.1.6+wheezy kamailio-sctp-modules=5.1.6+wheezy kamailio-snmpstats-modules=5.1.6+wheezy kamailio-sqlite-modules=5.1.6+wheezy kamailio-tls-modules=5.1.6+wheezy kamailio-unixodbc-modules=5.1.6+wheezy kamailio-utils-modules=5.1.6+wheezy kamailio-websocket-modules=5.1.6+wheezy kamailio-xml-modules=5.1.6+wheezy kamailio-xmpp-modules=5.1.6+wheezy
+RUN apt-get update && apt-get install --assume-yes kamailio=5.1.8+wheezy kamailio-autheph-modules=5.1.8+wheezy kamailio-berkeley-bin=5.1.8+wheezy kamailio-berkeley-modules=5.1.8+wheezy kamailio-carrierroute-modules=5.1.8+wheezy kamailio-cpl-modules=5.1.8+wheezy kamailio-dbg=5.1.8+wheezy kamailio-erlang-modules=5.1.8+wheezy kamailio-extra-modules=5.1.8+wheezy kamailio-geoip-modules=5.1.8+wheezy kamailio-ims-modules=5.1.8+wheezy kamailio-java-modules=5.1.8+wheezy kamailio-json-modules=5.1.8+wheezy kamailio-ldap-modules=5.1.8+wheezy kamailio-lua-modules=5.1.8+wheezy kamailio-memcached-modules=5.1.8+wheezy kamailio-mono-modules=5.1.8+wheezy kamailio-mysql-modules=5.1.8+wheezy kamailio-nth=5.1.8+wheezy kamailio-outbound-modules=5.1.8+wheezy kamailio-perl-modules=5.1.8+wheezy kamailio-postgres-modules=5.1.8+wheezy kamailio-presence-modules=5.1.8+wheezy kamailio-python-modules=5.1.8+wheezy kamailio-radius-modules=5.1.8+wheezy kamailio-redis-modules=5.1.8+wheezy kamailio-sctp-modules=5.1.8+wheezy kamailio-snmpstats-modules=5.1.8+wheezy kamailio-sqlite-modules=5.1.8+wheezy kamailio-tls-modules=5.1.8+wheezy kamailio-unixodbc-modules=5.1.8+wheezy kamailio-utils-modules=5.1.8+wheezy kamailio-websocket-modules=5.1.8+wheezy kamailio-xml-modules=5.1.8+wheezy kamailio-xmpp-modules=5.1.8+wheezy
 
 VOLUME /etc/kamailio
 
