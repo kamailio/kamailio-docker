@@ -74,6 +74,10 @@ case ${dist} in
 esac
 
 case ${version} in
+  5\.3*)
+    echo "5.3 series"
+    kam_version="53"
+    ;;
   5\.2*)
     echo "5.2 series"
     kam_version="52"
