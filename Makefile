@@ -1,6 +1,6 @@
 DISTS ?= buster jessie stretch wheezy bionic precise trusty xenial
 
-VERSION ?= 5.2.4
+VERSION ?= 5.2.6
 
 all: clean
 	for i in $(DISTS) ; do \
