@@ -1,7 +1,8 @@
 #!/bin/bash
 kam_packages() {
-  wget -O- "http://deb.kamailio.org/kamailio${kam_version}/dists/${dist}/main/binary-amd64/Packages" | \
-    awk -vver="${version}+${dist}" '/Package:/ { print $2"="ver}' | xargs
+  wget -q -O /tmp/Packages "http://deb.kamailio.org/kamailio${kam_version}/dists/${dist}/main/binary-amd64/Packages"
+  repo_version=$(awk '/Version:/ { print $2 }' /tmp/Packages| head -1)
+  awk -vver="${repo_version}" '/Package:/ { print $2"="ver}' /tmp/Packages | xargs
 }
 
 create_dockerfile() {
