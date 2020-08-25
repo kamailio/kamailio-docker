@@ -62,7 +62,7 @@ version=${2:-5.0.3}
 DATE=$(date --rfc-3339=date)
 
 case ${dist} in
-  bionic|xenial|trusty|precise) base=ubuntu ;;
+  focal|bionic|xenial|trusty|precise) base=ubuntu ;;
   squeeze|wheezy|jessie|stretch|buster) base=debian ;;
   *)
     echo "ERROR: no ${dist} base supported"
@@ -75,6 +75,10 @@ case ${dist} in
 esac
 
 case ${version} in
+  5\.4*)
+    echo "5.4 series"
+    kam_version="54"
+    ;;
   5\.3*)
     echo "5.3 series"
     kam_version="53"
