@@ -9,7 +9,7 @@ create_dockerfile() {
   cat >"${DOCKERFILE}" <<EOF
 FROM ${base}:${dist}
 
-MAINTAINER Victor Seva <linuxmaniac@torreviejawireless.org>
+LABEL maintainer="Victor Seva <linuxmaniac@torreviejawireless.org>"
 
 # Important! Update this no-op ENV variable when this Dockerfile
 # is updated with the current date. It will force refresh of all
