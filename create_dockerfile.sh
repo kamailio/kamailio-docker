@@ -63,7 +63,7 @@ DATE=$(date +"%Y-%m-%d")
 
 case ${dist} in
   focal|bionic|xenial|trusty|precise) base=ubuntu ;;
-  squeeze|wheezy|jessie|stretch|buster) base=debian ;;
+  squeeze|wheezy|jessie|stretch|buster|bullseye) base=debian ;;
   *)
     echo "ERROR: no ${dist} base supported"
     exit 1
