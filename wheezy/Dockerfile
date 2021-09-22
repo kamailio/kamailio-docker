@@ -6,7 +6,7 @@ LABEL maintainer="Victor Seva <linuxmaniac@torreviejawireless.org>"
 # is updated with the current date. It will force refresh of all
 # of the base images and things like 'apt-get update' won't be using
 # old cached versions when the Dockerfile is built.
-ENV REFRESHED_AT 2021-05-07
+ENV REFRESHED_AT 2021-09-22
 
 # avoid httpredir errors
 RUN sed -i 's/httpredir/deb/g' /etc/apt/sources.list
