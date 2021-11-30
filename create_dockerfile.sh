@@ -59,7 +59,7 @@ EOF
 
 dist=${1:-stretch}
 version=${2:-5.0.3}
-DATE=$(date --rfc-3339=date)
+DATE=$(date +"%Y-%m-%d")
 
 case ${dist} in
   focal|bionic|xenial|trusty|precise) base=ubuntu ;;
