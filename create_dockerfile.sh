@@ -58,7 +58,7 @@ EOF
 }
 
 dist=${1:-stretch}
-version=${2:-5.0.3}
+version=${2:-5.0.8}
 DATE=$(date +"%Y-%m-%d")
 
 case ${dist} in
