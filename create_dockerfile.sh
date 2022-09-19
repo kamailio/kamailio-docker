@@ -7,7 +7,7 @@ kam_packages() {
 
 create_dockerfile() {
   cat >"${DOCKERFILE}" <<EOF
-FROM ${base}:${dist}
+FROM ${docker_tag}
 
 LABEL maintainer="Victor Seva <linuxmaniac@torreviejawireless.org>"
 
@@ -19,22 +19,6 @@ ENV REFRESHED_AT ${DATE}
 
 EOF
 
-if [ -n "${archived}" ] ; then
-cat >>"${DOCKERFILE}" <<EOF
-RUN echo "deb http://archive.debian.org/debian ${dist} main" > \
-  /etc/apt/sources.list; \
-  echo "deb http://archive.debian.org/debian ${dist}-lts main" >> \
-    /etc/apt/sources.list ; \
-  echo "Acquire::Check-Valid-Until false;" >> /etc/apt/apt.conf
-
-EOF
-elif [ "${base}" = "debian" ] ; then
-cat >>"${DOCKERFILE}" <<EOF
-# avoid httpredir errors
-RUN sed -i 's/httpredir/deb/g' /etc/apt/sources.list
-
-EOF
-fi
 cat >>"${DOCKERFILE}" <<EOF
 RUN rm -rf /var/lib/apt/lists/* && apt-get update && \
   apt-get install --assume-yes gnupg wget
@@ -71,7 +55,8 @@ case ${dist} in
 esac
 
 case ${dist} in
-  squeeze) archived=true ;;
+  squeeze|wheezy|jessie|stretch) docker_tag=${base}/eol:${dist};;
+  *) docker_tag=${base}:${dist}
 esac
 
 case ${version} in
