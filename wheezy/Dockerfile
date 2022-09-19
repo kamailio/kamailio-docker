@@ -1,4 +1,4 @@
-FROM debian:wheezy
+FROM debian/eol:wheezy
 
 LABEL maintainer="Victor Seva <linuxmaniac@torreviejawireless.org>"
 
@@ -6,10 +6,7 @@ LABEL maintainer="Victor Seva <linuxmaniac@torreviejawireless.org>"
 # is updated with the current date. It will force refresh of all
 # of the base images and things like 'apt-get update' won't be using
 # old cached versions when the Dockerfile is built.
-ENV REFRESHED_AT 2021-06-08
-
-# avoid httpredir errors
-RUN sed -i 's/httpredir/deb/g' /etc/apt/sources.list
+ENV REFRESHED_AT 2022-09-19
 
 RUN rm -rf /var/lib/apt/lists/* && apt-get update &&   apt-get install --assume-yes gnupg wget
 # kamailio repo
