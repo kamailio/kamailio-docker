@@ -21,7 +21,7 @@ EOF
 
 cat >>"${DOCKERFILE}" <<EOF
 RUN rm -rf /var/lib/apt/lists/* && apt-get update && \
-  apt-get install --assume-yes gnupg wget
+  DEBIAN_FRONTEND=noninteractive apt-get install -qq --assume-yes gnupg wget
 # kamailio repo
 RUN echo "deb http://deb.kamailio.org/kamailio${kam_version} ${dist} main" > \
   /etc/apt/sources.list.d/kamailio.list
@@ -30,7 +30,8 @@ RUN wget -O- http://deb.kamailio.org/kamailiodebkey.gpg | apt-key add -
 EOF
 
 cat >>"${DOCKERFILE}" <<EOF
-RUN apt-get update && apt-get install --assume-yes ${PKGS}
+RUN apt-get update && \
+  DEBIAN_FRONTEND=noninteractive apt-get install -qq --assume-yes ${PKGS}
 
 VOLUME /etc/kamailio
 
