@@ -8,9 +8,6 @@ LABEL maintainer="Victor Seva <linuxmaniac@torreviejawireless.org>"
 # old cached versions when the Dockerfile is built.
 ENV REFRESHED_AT 2022-09-19
 
-# avoid httpredir errors
-RUN sed -i 's/httpredir/deb/g' /etc/apt/sources.list
-
 RUN rm -rf /var/lib/apt/lists/* && apt-get update &&   apt-get install --assume-yes gnupg wget
 # kamailio repo
 RUN echo "deb http://deb.kamailio.org/kamailio55 bullseye main" >   /etc/apt/sources.list.d/kamailio.list

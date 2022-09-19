@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM debian/eol:jessie
 
 LABEL maintainer="Victor Seva <linuxmaniac@torreviejawireless.org>"
 
@@ -7,9 +7,6 @@ LABEL maintainer="Victor Seva <linuxmaniac@torreviejawireless.org>"
 # of the base images and things like 'apt-get update' won't be using
 # old cached versions when the Dockerfile is built.
 ENV REFRESHED_AT 2022-09-19
-
-# avoid httpredir errors
-RUN sed -i 's/httpredir/deb/g' /etc/apt/sources.list
 
 RUN rm -rf /var/lib/apt/lists/* && apt-get update &&   apt-get install --assume-yes gnupg wget
 # kamailio repo
