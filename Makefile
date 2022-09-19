@@ -1,4 +1,4 @@
-DISTS ?= bullseye buster jessie stretch wheezy focal bionic trusty xenial
+DISTS ?= bullseye buster jessie stretch focal bionic trusty xenial
 
 VERSION ?= 5.5.5
 
