@@ -5,7 +5,8 @@ on:
   push:
     branches:
       - '5.*'
-
+permissions:
+  contents: read # to fetch code (actions/checkout)
 jobs:
   pre-docker:
     runs-on: ubuntu-latest
