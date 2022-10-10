@@ -19,6 +19,10 @@ ENV REFRESHED_AT ${DATE}
 
 EOF
 
+if ! wget -O /dev/null -q "http://deb.kamailio.org/kamailio${kam_version}/dists/${dist}" ; then
+  echo "*** ERROR repository not found ***"
+fi
+
 cat >>"${DOCKERFILE}" <<EOF
 RUN rm -rf /var/lib/apt/lists/* && apt-get update && \
   DEBIAN_FRONTEND=noninteractive apt-get install -qq --assume-yes gnupg wget
