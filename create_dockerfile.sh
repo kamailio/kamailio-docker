@@ -47,8 +47,8 @@ version=${2:-5.0.3}
 DATE=$(date +"%Y-%m-%d")
 
 case ${dist} in
-  focal|bionic|xenial|trusty|precise) base=ubuntu ;;
-  squeeze|wheezy|jessie|stretch|buster|bullseye) base=debian ;;
+  jammy|focal|bionic|xenial|trusty|precise) base=ubuntu ;;
+  squeeze|wheezy|jessie|stretch|buster|bullseye|bookworm) base=debian ;;
   *)
     echo "ERROR: no ${dist} base supported"
     exit 1
