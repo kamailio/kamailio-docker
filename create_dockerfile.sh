@@ -38,7 +38,11 @@ VOLUME /etc/kamailio
 # clean
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-ENTRYPOINT ["kamailio", "-DD", "-E"]
+# set SHM_MEMORY and PKG_MEMORY from ENV
+ENV SHM_MEMORY=${SHM_MEMORY:-64}
+ENV PKG_MEMORY=${PKG_MEMORY:-8}
+
+ENTRYPOINT kamailio -DD -E -m $SHM_MEMORY -M $PKG_MEMORY
 EOF
 }
 
