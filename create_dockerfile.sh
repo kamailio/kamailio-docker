@@ -20,7 +20,7 @@ ENV REFRESHED_AT ${DATE}
 EOF
 
 if ! wget -O /dev/null -q "http://deb.kamailio.org/kamailio${kam_version}/dists/${dist}" ; then
-  echo "*** ERROR repository not found ***"
+  echo "*** ERROR kamailio${kam_version} for ${dist} repository not found ***"
 fi
 
 cat >>"${DOCKERFILE}" <<EOF
@@ -29,9 +29,16 @@ RUN rm -rf /var/lib/apt/lists/* && apt-get update && \
 # kamailio repo
 RUN echo "deb http://deb.kamailio.org/kamailio${kam_version} ${dist} main" > \
   /etc/apt/sources.list.d/kamailio.list
-RUN wget -O- http://deb.kamailio.org/kamailiodebkey.gpg | apt-key add -
-
 EOF
+
+if ${apt_key} ; then
+  echo "RUN wget -O- http://deb.kamailio.org/kamailiodebkey.gpg | apt-key add -" >> ${DOCKERFILE}
+else
+  cat >>"${DOCKERFILE}" <<EOF
+RUN wget -O /tmp/kamailiodebkey.gpg http://deb.kamailio.org/kamailiodebkey.gpg && \
+  gpg --output /etc/apt/trusted.gpg.d/deb-kamailio-org.gpg --dearmor /tmp/kamailiodebkey.gpg
+EOF
+fi
 
 cat >>"${DOCKERFILE}" <<EOF
 RUN apt-get update && \
@@ -66,6 +73,11 @@ esac
 case ${dist} in
   squeeze|wheezy|jessie|stretch) docker_tag=${base}/eol:${dist};;
   *) docker_tag=${base}:${dist}
+esac
+
+case ${dist} in
+  bookworm) apt_key=false ;;
+  *) apt_key=true
 esac
 
 case ${version} in
