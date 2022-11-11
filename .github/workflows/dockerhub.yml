@@ -11,19 +11,19 @@ jobs:
   pre-docker:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - id: set-matrix
         run: |
           sudo apt-get install jq
-          echo "::set-output name=matrix::$(bash get-all-dist.sh)"
+          echo "matrix=$(bash get-all-dist.sh)" >> $GITHUB_OUTPUT
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      dist: ${{ steps.set-matrix.outputs.matrix }}
   docker:
     needs: pre-docker
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        dist: ${{fromJson(needs.pre-docker.outputs.matrix)}}
+        dist: ${{fromJson(needs.pre-docker.outputs.dist)}}
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -38,5 +38,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: "{{defaultContext}}:${{ matrix.dist }}"
+          # we need to build for arm64 first
+          # platforms: linux/amd64,linux/arm64
           push: true
           tags: kamailio/kamailio:${{ github.ref_name }}-${{ matrix.dist }}
