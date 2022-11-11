@@ -6,7 +6,7 @@ LABEL maintainer="Victor Seva <linuxmaniac@torreviejawireless.org>"
 # is updated with the current date. It will force refresh of all
 # of the base images and things like 'apt-get update' won't be using
 # old cached versions when the Dockerfile is built.
-ENV REFRESHED_AT 2022-09-19
+ENV REFRESHED_AT 2022-11-11
 
 RUN rm -rf /var/lib/apt/lists/* && apt-get update &&   DEBIAN_FRONTEND=noninteractive apt-get install -qq --assume-yes gnupg wget
 # kamailio repo
@@ -20,4 +20,8 @@ VOLUME /etc/kamailio
 # clean
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-ENTRYPOINT ["kamailio", "-DD", "-E"]
+# set SHM_MEMORY and PKG_MEMORY from ENV
+ENV SHM_MEMORY=${SHM_MEMORY:-64}
+ENV PKG_MEMORY=${PKG_MEMORY:-8}
+
+ENTRYPOINT ["kamailio", "-DD", "-E", "-m ${SHM_MEMORY}", "-M ${PKG_MEMORY}"]
