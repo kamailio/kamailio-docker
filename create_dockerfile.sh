@@ -1,6 +1,27 @@
 #!/bin/bash
+dist=${1:-bookworm}
+version=${2:-5.7.4}
+DATE=$(date +"%Y-%m-%d")
+
+KAM_ARCHIVE_REPO="http://deb-archive.kamailio.org/repos/kamailio-${version}"
+KAM_REPO="${KAM_ARCHIVE_REPO}"
+
+get_kam_version() {
+  if [[ ${version} =~ 4\.4\.[0-9] ]] ; then
+    kam_version="44"
+  elif [[ ${version} =~ 5\.([0-9])\.[0-9] ]] ; then
+    kam_version="5${BASH_REMATCH[1]}"
+  else
+    echo "unknown kamailio version '${version}'" >&2
+  fi
+}
+
 kam_packages() {
-  wget -q -O /tmp/Packages "http://deb.kamailio.org/kamailio${kam_version}/dists/${dist}/main/binary-amd64/Packages"
+  if ! wget -q -O /tmp/Packages "${KAM_ARCHIVE_REPO}/dists/${dist}/main/binary-amd64/Packages" ; then
+    get_kam_version
+    KAM_REPO="http://deb.kamailio.org/kamailio${kam_version}"
+    wget -q -O /tmp/Packages "${KAM_REPO}/dists/${dist}/main/binary-amd64/Packages"
+  fi
   repo_version=$(awk '/Version:/ { print $2 }' /tmp/Packages| head -1)
   awk -vver="${repo_version}" '/Package:/ { print $2"="ver}' /tmp/Packages | xargs
 }
@@ -9,7 +30,7 @@ create_dockerfile() {
   cat >"${DOCKERFILE}" <<EOF
 FROM ${docker_tag}
 
-LABEL maintainer="Victor Seva <linuxmaniac@torreviejawireless.org>"
+LABEL org.opencontainers.image.authors Victor Seva <linuxmaniac@torreviejawireless.org>
 
 # Important! Update this no-op ENV variable when this Dockerfile
 # is updated with the current date. It will force refresh of all
@@ -17,17 +38,10 @@ LABEL maintainer="Victor Seva <linuxmaniac@torreviejawireless.org>"
 # old cached versions when the Dockerfile is built.
 ENV REFRESHED_AT ${DATE}
 
-EOF
-
-if ! wget -O /dev/null -q "http://deb.kamailio.org/kamailio${kam_version}/dists/${dist}" ; then
-  echo "*** ERROR kamailio${kam_version} for ${dist} repository not found ***"
-fi
-
-cat >>"${DOCKERFILE}" <<EOF
 RUN rm -rf /var/lib/apt/lists/* && apt-get update && \
-  DEBIAN_FRONTEND=noninteractive apt-get install -qq --assume-yes gnupg wget
+  DEBIAN_FRONTEND=noninteractive apt-get install -qq --assume-yes gnupg wget apt-transport-https
 # kamailio repo
-RUN echo "deb http://deb.kamailio.org/kamailio${kam_version} ${dist} main" > \
+RUN echo "deb ${KAM_REPO} ${dist} main" > \
   /etc/apt/sources.list.d/kamailio.list
 EOF
 
@@ -42,24 +56,17 @@ fi
 
 cat >>"${DOCKERFILE}" <<EOF
 RUN apt-get update && \
-  DEBIAN_FRONTEND=noninteractive apt-get install -qq --assume-yes ${PKGS}
-
-VOLUME /etc/kamailio
-
-# clean
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+  DEBIAN_FRONTEND=noninteractive apt-get install -qq --assume-yes ${PKGS} \
+  && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # set SHM_MEMORY and PKG_MEMORY from ENV
 ENV SHM_MEMORY=${SHM_MEMORY:-64}
 ENV PKG_MEMORY=${PKG_MEMORY:-8}
 
+VOLUME /etc/kamailio
 ENTRYPOINT kamailio -DD -E -m \${SHM_MEMORY} -M \${PKG_MEMORY}
 EOF
 }
-
-dist=${1:-stretch}
-version=${2:-5.0.3}
-DATE=$(date +"%Y-%m-%d")
 
 case ${dist} in
   jammy|focal|bionic|xenial|trusty|precise) base=ubuntu ;;
@@ -80,49 +87,7 @@ case ${dist} in
   *) apt_key=true
 esac
 
-case ${version} in
-  5\.7*)
-    echo "5.7 series"
-    kam_version="57"
-    ;;
-  5\.6*)
-    echo "5.6 series"
-    kam_version="56"
-    ;;
-  5\.5*)
-    echo "5.5 series"
-    kam_version="55"
-    ;;
-  5\.4*)
-    echo "5.4 series"
-    kam_version="54"
-    ;;
-  5\.3*)
-    echo "5.3 series"
-    kam_version="53"
-    ;;
-  5\.2*)
-    echo "5.2 series"
-    kam_version="52"
-    ;;
-  5\.1*)
-    echo "5.1 series"
-    kam_version="51"
-    ;;
-  5\.0*)
-    echo "5.0 series"
-    kam_version="50"
-    ;;
-  4\.4*)
-    echo "4.4 series"
-    kam_version="44"
-    ;;
-  *)
-    echo "unknown kamailio version '${version}'"
-    exit 1;;
-esac
-
 PKGS=$(kam_packages)
-mkdir -p "${dist}/${version}"
+mkdir -p "${dist}"
 DOCKERFILE="${dist}/Dockerfile"
 create_dockerfile
