@@ -1,12 +1,15 @@
 ---
-name: dockerhub
-
+name: github-packages
 on:
   push:
     branches:
       - '5.*'
-permissions:
-  contents: read # to fetch code (actions/checkout)
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+env:
+  REGISTRY_NAME: ghcr.io
+  IMAGE_NAME: kamailio
+  REGISTRY_IMAGE: kamailio/kamailio
 jobs:
   pre-docker:
     runs-on: ubuntu-latest
@@ -21,6 +24,9 @@ jobs:
   docker:
     needs: pre-docker
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     strategy:
       matrix:
         dist: ${{fromJson(needs.pre-docker.outputs.dist)}}
@@ -32,14 +38,28 @@ jobs:
       - name: Login to GitHub Registry
         uses: docker/login-action@v3
         with:
-          registry: ghcr.io
+          registry: ${{ env.REGISTRY_NAME }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY_NAME }}/${{ env.REGISTRY_IMAGE }}
+          tags: |
+            type=raw,value=${{ github.ref_name }}-${{ matrix.dist }}
+          labels: |
+            org.opencontainers.image.title=${{ env.IMAGE_NAME }}
+            org.opencontainers.image.description=official Debian base image
+        env:
+          DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
           context: "{{defaultContext}}:${{ matrix.dist }}"
-          # we need to build for arm64 first
+          # we need to build for arm64 first at kamailio.sipwise.com
           # platforms: linux/amd64,linux/arm64
+          labels: ${{ steps.meta.outputs.labels }}
           push: true
-          tags: ghcr.io/kamailio/kamailio:${{ github.ref_name }}-${{ matrix.dist }}
+          tags: ${{ steps.meta.outputs.tags }}
+          annotations: ${{ steps.meta.outputs.annotations }}
