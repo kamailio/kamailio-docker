@@ -30,7 +30,12 @@ kam_packages() {
     wget -q -O /tmp/Packages "${KAM_REPO}/dists/${dist}/main/binary-amd64/Packages"
   fi
   repo_version=$(awk '/Version:/ { print $2 }' /tmp/Packages| head -1)
-  awk -vver="${repo_version}" '/Package:/ { print $2"="ver}' /tmp/Packages | xargs
+  if [[ ${repo_version} =~ ^${version} ]] ; then
+    awk -vver="${repo_version}" '/Package:/ { print $2"="ver}' /tmp/Packages | xargs
+  else
+    echo "packages in repository \"deb ${KAM_REPO} ${dist} main\" doesn't match version: [${version}]" >&2
+    echo "version in repository: [${repo_version}]" >&2
+  fi
 }
 
 create_dockerfile() {
@@ -96,6 +101,7 @@ esac
 
 KAM_REPO=$(get_kam_repo)
 PKGS=$(kam_packages)
+[ -n "${PKGS}" ] || exit 1
 mkdir -p "${dist}"
 DOCKERFILE="${dist}/Dockerfile"
 create_dockerfile
