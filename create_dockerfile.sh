@@ -4,7 +4,14 @@ version=${2:-5.0.3}
 DATE=$(date +"%Y-%m-%d")
 
 KAM_ARCHIVE_REPO="http://deb-archive.kamailio.org/repos/kamailio-${version}"
-KAM_REPO="${KAM_ARCHIVE_REPO}"
+
+get_kam_repo() {
+  if ! wget -q -O /tmp/Packages "${KAM_ARCHIVE_REPO}/dists/${dist}/main/binary-amd64/Packages" ; then
+    echo "http://deb.kamailio.org/kamailio${kam_version}"
+  else
+    echo "${KAM_ARCHIVE_REPO}"
+  fi
+}
 
 get_kam_version() {
   if [[ ${version} =~ 4\.4\.[0-9] ]] ; then
@@ -87,6 +94,7 @@ case ${dist} in
   *) apt_key=true
 esac
 
+KAM_REPO=$(get_kam_repo)
 PKGS=$(kam_packages)
 mkdir -p "${dist}"
 DOCKERFILE="${dist}/Dockerfile"
