@@ -1,0 +1,65 @@
+---
+name: github-packages
+on:
+  push:
+    branches:
+      - '5.*'
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+env:
+  REGISTRY_NAME: ghcr.io
+  IMAGE_NAME: kamailio
+  REGISTRY_IMAGE: kamailio/kamailio
+jobs:
+  pre-docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: set-matrix
+        run: |
+          sudo apt-get install jq
+          echo "matrix=$(bash get-all-dist.sh)" >> $GITHUB_OUTPUT
+    outputs:
+      dist: ${{ steps.set-matrix.outputs.matrix }}
+  docker:
+    needs: pre-docker
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        dist: ${{fromJson(needs.pre-docker.outputs.dist)}}
+    steps:
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to GitHub Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY_NAME }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY_NAME }}/${{ env.REGISTRY_IMAGE }}
+          tags: |
+            type=raw,value=${{ github.ref_name }}-${{ matrix.dist }}
+          labels: |
+            org.opencontainers.image.title=${{ env.IMAGE_NAME }}
+            org.opencontainers.image.description=official Debian base image
+        env:
+          DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: "{{defaultContext}}:${{ matrix.dist }}"
+          # we need to build for arm64 first at kamailio.sipwise.com
+          # platforms: linux/amd64,linux/arm64
+          labels: ${{ steps.meta.outputs.labels }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          annotations: ${{ steps.meta.outputs.annotations }}
