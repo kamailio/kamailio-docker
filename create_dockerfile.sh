@@ -49,7 +49,16 @@ LABEL org.opencontainers.image.authors Victor Seva <linuxmaniac@torreviejawirele
 # of the base images and things like 'apt-get update' won't be using
 # old cached versions when the Dockerfile is built.
 ENV REFRESHED_AT ${DATE}
+EOF
 
+if [[ "${docker_tag}" =~ "debian/eol" ]] ; then
+  cat >>"${DOCKERFILE}" <<EOF
+# fix repositories
+RUN sed -i -e 's/deb.debian.org/archive.debian.org/g' -e '/${dist}-updates/d' /etc/apt/sources.list
+EOF
+fi
+
+  cat >>"${DOCKERFILE}" <<EOF
 RUN rm -rf /var/lib/apt/lists/* && apt-get update && \
   DEBIAN_FRONTEND=noninteractive apt-get install -qq --assume-yes gnupg wget apt-transport-https
 # kamailio repo
