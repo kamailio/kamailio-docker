@@ -51,10 +51,10 @@ LABEL org.opencontainers.image.authors Victor Seva <linuxmaniac@torreviejawirele
 ENV REFRESHED_AT ${DATE}
 EOF
 
-if [[ "${docker_tag}" =~ "debian/eol" ]] ; then
+if ${archived} ; then
   cat >>"${DOCKERFILE}" <<EOF
 # fix repositories
-RUN sed -i -e 's/deb.debian.org/archive.debian.org/g' -e '/${dist}-updates/d' /etc/apt/sources.list
+${RULE}
 EOF
 fi
 
@@ -106,6 +106,18 @@ esac
 case ${dist} in
   bookworm) apt_key=false ;;
   *) apt_key=true
+esac
+
+archived=false
+case ${dist} in
+  precise)
+    archived=true ; MIRROR=old-release.ubuntu.com
+    RULE="RUN sed -i -e 's/archive.ubuntu.com/old-releases.ubuntu.com/g' /etc/apt/sources.list"
+    ;;
+  squeeze|wheezy|jessie|stretch)
+    archived=true ; MIRROR=archive.debian.org
+    RULE="RUN sed -i -e 's/deb.debian.org/archive.debian.org/g' -e '/security.debian.org/d' -e '/${dist}-updates/d' /etc/apt/sources.list"
+    ;;
 esac
 
 KAM_REPO=$(get_kam_repo)
