@@ -6,6 +6,11 @@ on:
       - '5.*'
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+    inputs:
+      dists:
+        description: list of dists to build, coma separated. xenial,sid
+        required: false
+        type: string
 env:
   REGISTRY_NAME: ghcr.io
   IMAGE_NAME: kamailio
@@ -18,7 +23,7 @@ jobs:
       - id: set-matrix
         run: |
           sudo apt-get install jq
-          echo "matrix=$(bash get-all-dist.sh)" >> $GITHUB_OUTPUT
+          echo "matrix=$(bash get-all-dist.sh ${{ github.event.inputs.dists }})" >> $GITHUB_OUTPUT
     outputs:
       dist: ${{ steps.set-matrix.outputs.matrix }}
   docker:
