@@ -25,7 +25,6 @@ get_kam_version() {
 
 kam_packages() {
   if ! wget -q -O /tmp/Packages "${KAM_ARCHIVE_REPO}/dists/${dist}/main/binary-amd64/Packages" ; then
-    get_kam_version
     KAM_REPO="http://deb.kamailio.org/kamailio${kam_version}"
     wget -q -O /tmp/Packages "${KAM_REPO}/dists/${dist}/main/binary-amd64/Packages"
   fi
@@ -120,6 +119,7 @@ case ${dist} in
     ;;
 esac
 
+get_kam_version
 KAM_REPO=$(get_kam_repo)
 PKGS=$(kam_packages)
 [ -n "${PKGS}" ] || exit 1
