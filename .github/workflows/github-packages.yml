@@ -59,7 +59,7 @@ jobs:
         env:
           DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
       - name: Build and push
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: "{{defaultContext}}:${{ matrix.dist }}"
           # we need to build for arm64 first at kamailio.sipwise.com
