@@ -33,6 +33,7 @@ jobs:
       contents: read
       packages: write
     strategy:
+      fail-fast: false
       matrix:
         dist: ${{fromJson(needs.pre-docker.outputs.dist)}}
     steps:
