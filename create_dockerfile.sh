@@ -3,11 +3,11 @@ dist=${1:-stretch}
 version=${2:-5.0.3}
 DATE=$(date +"%Y-%m-%d")
 
-KAM_ARCHIVE_REPO="http://deb-archive.kamailio.org/repos/kamailio-${version}"
+KAM_ARCHIVE_REPO="https://deb-archive.kamailio.org/repos/kamailio-${version}"
 
 get_kam_repo() {
   if ! wget -q -O /tmp/Packages "${KAM_ARCHIVE_REPO}/dists/${dist}/main/binary-amd64/Packages" ; then
-    echo "http://deb.kamailio.org/kamailio${kam_version}"
+    echo "https://deb.kamailio.org/kamailio${kam_version}"
   else
     echo "${KAM_ARCHIVE_REPO}"
   fi
@@ -25,7 +25,7 @@ get_kam_version() {
 
 kam_packages() {
   if ! wget -q -O /tmp/Packages "${KAM_ARCHIVE_REPO}/dists/${dist}/main/binary-amd64/Packages" ; then
-    KAM_REPO="http://deb.kamailio.org/kamailio${kam_version}"
+    KAM_REPO="https://deb.kamailio.org/kamailio${kam_version}"
     wget -q -O /tmp/Packages "${KAM_REPO}/dists/${dist}/main/binary-amd64/Packages"
   fi
   repo_version=$(awk '/Version:/ { print $2 }' /tmp/Packages| head -1)
@@ -66,10 +66,10 @@ RUN echo "deb ${KAM_REPO} ${dist} main" > \
 EOF
 
 if ${apt_key} ; then
-  echo "RUN wget -O- http://deb.kamailio.org/kamailiodebkey.gpg | apt-key add -" >> ${DOCKERFILE}
+  echo "RUN wget -O- https://deb.kamailio.org/kamailiodebkey.gpg | apt-key add -" >> ${DOCKERFILE}
 else
   cat >>"${DOCKERFILE}" <<EOF
-RUN wget -O /tmp/kamailiodebkey.gpg http://deb.kamailio.org/kamailiodebkey.gpg && \
+RUN wget -O /tmp/kamailiodebkey.gpg https://deb.kamailio.org/kamailiodebkey.gpg && \
   gpg --output /etc/apt/trusted.gpg.d/deb-kamailio-org.gpg --dearmor /tmp/kamailiodebkey.gpg
 EOF
 fi
