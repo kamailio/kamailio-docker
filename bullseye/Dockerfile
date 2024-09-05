@@ -1,12 +1,12 @@
 FROM debian:bullseye
 
-LABEL org.opencontainers.image.authors Victor Seva <linuxmaniac@torreviejawireless.org>
+LABEL org.opencontainers.image.authors="Victor Seva <linuxmaniac@torreviejawireless.org>"
 
 # Important! Update this no-op ENV variable when this Dockerfile
 # is updated with the current date. It will force refresh of all
 # of the base images and things like 'apt-get update' won't be using
 # old cached versions when the Dockerfile is built.
-ENV REFRESHED_AT 2024-09-05
+ENV REFRESHED_AT=2024-09-05
 RUN rm -rf /var/lib/apt/lists/* && apt-get update &&   DEBIAN_FRONTEND=noninteractive apt-get install -qq --assume-yes gnupg wget apt-transport-https
 # kamailio repo
 RUN echo "deb https://deb-archive.kamailio.org/repos/kamailio-5.8.3 bullseye main" >   /etc/apt/sources.list.d/kamailio.list
