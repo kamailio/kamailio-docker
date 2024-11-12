@@ -89,7 +89,7 @@ EOF
 }
 
 case ${dist} in
-  jammy|focal|bionic|xenial|trusty|precise) base=ubuntu ;;
+  noble|jammy|focal|bionic|xenial|trusty|precise) base=ubuntu ;;
   squeeze|wheezy|jessie|stretch|buster|bullseye|bookworm) base=debian ;;
   *)
     echo "ERROR: no ${dist} base supported"
