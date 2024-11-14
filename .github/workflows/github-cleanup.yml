@@ -1,0 +1,31 @@
+---
+name: github-cleanup
+on:
+  schedule:
+    - cron: '30 2 * * *'
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      dryrun:
+        description: dry-run execution, default 'false'
+        required: true
+        default: false
+        type: boolean
+env:
+  REGISTRY_NAME: ghcr.io
+  IMAGE_NAME: kamailio
+  REGISTRY_IMAGE: kamailio/kamailio
+jobs:
+  clean:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Cleanup ghcr
+        uses: quartx-analytics/ghcr-cleaner@v1
+        with:
+            owner-type: org
+            token: ${{ secrets.CLEAN_PACKAGES }}
+            delete-untagged: true
+            dry-run: ${{ github.event.inputs.dryrun }}
