@@ -2,7 +2,7 @@
 name: github-cleanup
 on:
   schedule:
-    - cron: '30 2 * * *'
+    - cron: '30 2 1 * *'
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
@@ -28,4 +28,4 @@ jobs:
             owner-type: org
             token: ${{ secrets.CLEAN_PACKAGES }}
             delete-untagged: true
-            dry-run: ${{ github.event.inputs.dryrun }}
+            dry-run: ${{ fromJson(github.event.inputs.dryrun) }}
