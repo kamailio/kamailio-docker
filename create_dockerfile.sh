@@ -1,6 +1,6 @@
 #!/bin/bash
 dist=${1:-bookworm}
-version=${2:-5.7.4}
+version=${2:-6.0.0}
 DATE=$(date +"%Y-%m-%d")
 
 KAM_ARCHIVE_REPO="https://deb-archive.kamailio.org/repos/kamailio-${version}"
@@ -16,8 +16,8 @@ get_kam_repo() {
 get_kam_version() {
   if [[ ${version} =~ 4\.4\.[0-9] ]] ; then
     kam_version="44"
-  elif [[ ${version} =~ 5\.([0-9])\.[0-9] ]] ; then
-    kam_version="5${BASH_REMATCH[1]}"
+  elif [[ ${version} =~ ([5-9])\.([0-9]+)\.[0-9]+ ]] ; then
+    kam_version="${BASH_REMATCH[1]}${BASH_REMATCH[2]}"
   else
     echo "unknown kamailio version '${version}'" >&2
   fi
