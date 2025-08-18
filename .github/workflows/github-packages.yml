@@ -20,7 +20,7 @@ jobs:
   pre-docker:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - id: set-matrix
         run: |
           sudo apt-get install jq
