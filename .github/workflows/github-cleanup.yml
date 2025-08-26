@@ -28,4 +28,4 @@ jobs:
             owner-type: org
             token: ${{ secrets.CLEAN_PACKAGES }}
             delete-untagged: true
-            dry-run: ${{ inputs.dryrun }}
+            dry-run: ${{ github.event.inputs.dryrun || 'false' }}
