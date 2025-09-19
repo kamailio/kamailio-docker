@@ -90,7 +90,7 @@ EOF
 
 case ${dist} in
   noble|jammy|focal|bionic|xenial|trusty|precise) base=ubuntu ;;
-  squeeze|wheezy|jessie|stretch|buster|bullseye|bookworm) base=debian ;;
+  squeeze|wheezy|jessie|stretch|buster|bullseye|bookworm|trixie) base=debian ;;
   *)
     echo "ERROR: no ${dist} base supported"
     exit 1
@@ -103,7 +103,7 @@ case ${dist} in
 esac
 
 case ${dist} in
-  bookworm) apt_key=false ;;
+  bookworm|trixie) apt_key=false ;;
   *) apt_key=true
 esac
 
