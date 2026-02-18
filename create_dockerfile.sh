@@ -30,7 +30,7 @@ kam_packages() {
   fi
   repo_version=$(awk '/Version:/ { print $2 }' /tmp/Packages| head -1)
   if [[ ${repo_version} =~ ^${version} ]] ; then
-    awk -vver="${repo_version}" '/Package:/ { print $2"="ver}' /tmp/Packages | xargs
+    awk -vver="${repo_version}" '/Package:/ { print $2"="ver}' /tmp/Packages | grep -v 'debug-symbols' | xargs
   else
     echo "packages in repository \"deb ${KAM_REPO} ${dist} main\" doesn't match version: [${version}]" >&2
     echo "version in repository: [${repo_version}]" >&2
