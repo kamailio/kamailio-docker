@@ -5,4 +5,4 @@ if [[ ${GITHUB_REF:-} =~ refs/heads/([5-9])\.([0-9]+)\.[0-9]+ ]] ; then
     supported+=('linux/arm64')
   fi
 fi
-echo "${supported[*]}" | jq -R . | jq -c 'split(" ")'
+printf '%s\n' "$(IFS=,; printf '%s' "${supported[*]}")"
