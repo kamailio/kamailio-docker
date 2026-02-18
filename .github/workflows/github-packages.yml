@@ -25,8 +25,10 @@ jobs:
         run: |
           sudo apt-get install jq
           echo "matrix=$(bash get-all-dist.sh ${{ github.event.inputs.dists }})" >> $GITHUB_OUTPUT
+          echo "platforms=$(bash get-platforms.sh)" >> $GITHUB_OUTPUT
     outputs:
       dist: ${{ steps.set-matrix.outputs.matrix }}
+      platforms: ${{ steps.set-matrix.outputs.platforms }}
   docker:
     needs: pre-docker
     runs-on: ubuntu-latest
@@ -64,8 +66,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: "{{defaultContext}}:${{ matrix.dist }}"
-          # we need to build for arm64 first at kamailio.sipwise.com
-          # platforms: linux/amd64,linux/arm64
+          platforms: ${{fromJson(needs.pre-docker.outputs.platforms)}}
           labels: ${{ steps.meta.outputs.labels }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
