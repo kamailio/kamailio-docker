@@ -1,6 +1,6 @@
 DISTS ?= trixie bookworm bullseye noble jammy
 
-VERSION ?= 6.1.0
+VERSION ?= 6.1.1
 
 all: clean
 	for i in $(DISTS) ; do \
