@@ -102,7 +102,7 @@ case ${dist} in
 esac
 
 case ${dist} in
-  bookworm|trixie) apt_key=false ;;
+  noble|jammy|bullseye|bookworm|trixie) apt_key=false ;;
   *) apt_key=true
 esac
 
