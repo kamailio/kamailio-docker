@@ -52,7 +52,7 @@ EOF
 
 if [[ ${archived} && -n ${RULE} ]] ; then
   cat >>"${DOCKERFILE}" <<EOF
-# fix repositories if required
+# fix repositories
 ${RULE}
 EOF
 fi
