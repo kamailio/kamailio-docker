@@ -1,5 +1,5 @@
 #!/bin/bash
-dist=${1:-bookworm}
+dist=${1:-trixie}
 version=${2:-6.0.0}
 DATE=$(date +"%Y-%m-%d")
 
@@ -50,19 +50,18 @@ LABEL org.opencontainers.image.authors="Victor Seva <linuxmaniac@torreviejawirel
 ENV REFRESHED_AT=${DATE}
 EOF
 
-if ${archived} ; then
+if [[ ${archived} && -n ${RULE} ]] ; then
   cat >>"${DOCKERFILE}" <<EOF
-# fix repositories
+# fix repositories if required
 ${RULE}
 EOF
 fi
 
   cat >>"${DOCKERFILE}" <<EOF
-RUN rm -rf /var/lib/apt/lists/* && apt-get update && \
-  DEBIAN_FRONTEND=noninteractive apt-get install -qq --assume-yes gnupg wget apt-transport-https
+RUN apt-get update && \
+  DEBIAN_FRONTEND=noninteractive apt-get install -qq --assume-yes gnupg wget
 # kamailio repo
-RUN echo "deb ${KAM_REPO} ${dist} main" > \
-  /etc/apt/sources.list.d/kamailio.list
+RUN echo "deb ${KAM_REPO} ${dist} main" > /etc/apt/sources.list.d/kamailio.list
 EOF
 
 if ${apt_key} ; then
@@ -90,7 +89,7 @@ EOF
 
 case ${dist} in
   noble|jammy|focal|bionic|xenial|trusty|precise) base=ubuntu ;;
-  squeeze|wheezy|jessie|stretch|buster|bullseye|bookworm|trixie) base=debian ;;
+  bullseye|bookworm|trixie) base=debian ;;
   *)
     echo "ERROR: no ${dist} base supported"
     exit 1
@@ -98,7 +97,7 @@ case ${dist} in
 esac
 
 case ${dist} in
-  squeeze|wheezy|jessie|stretch) docker_tag=${base}/eol:${dist};;
+  bullseye) docker_tag=${base}/eol:${dist};;
   *) docker_tag=${base}:${dist}
 esac
 
@@ -113,9 +112,8 @@ case ${dist} in
     archived=true ; MIRROR=old-release.ubuntu.com
     RULE="RUN sed -i -e 's/archive.ubuntu.com/old-releases.ubuntu.com/g' /etc/apt/sources.list"
     ;;
-  squeeze|wheezy|jessie|stretch)
+  bullseye)
     archived=true ; MIRROR=archive.debian.org
-    RULE="RUN sed -i -e 's/deb.debian.org/archive.debian.org/g' -e '/security.debian.org/d' -e '/${dist}-updates/d' /etc/apt/sources.list"
     ;;
 esac
 
