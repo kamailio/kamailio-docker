@@ -59,7 +59,8 @@ fi
 
   cat >>"${DOCKERFILE}" <<EOF
 RUN apt-get update && \
-  DEBIAN_FRONTEND=noninteractive apt-get install -qq --assume-yes gnupg wget
+  DEBIAN_FRONTEND=noninteractive apt-get install -qq --assume-yes gnupg wget && \
+  apt-get clean && rm -rf /var/lib/apt/lists/*
 # kamailio repo
 RUN echo "deb ${KAM_REPO} ${dist} main" > /etc/apt/sources.list.d/kamailio.list
 EOF
@@ -75,8 +76,8 @@ fi
 
 cat >>"${DOCKERFILE}" <<EOF
 RUN apt-get update && \
-  DEBIAN_FRONTEND=noninteractive apt-get install -qq --assume-yes ${PKGS} \
-  && apt-get clean && rm -rf /var/lib/apt/lists/*
+  DEBIAN_FRONTEND=noninteractive apt-get install -qq --assume-yes ${PKGS} && \
+  apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # set SHM_MEMORY and PKG_MEMORY from ENV
 ENV SHM_MEMORY=${SHM_MEMORY:-64}
