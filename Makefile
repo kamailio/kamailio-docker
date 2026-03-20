@@ -1,4 +1,4 @@
-DISTS ?= trixie bookworm bullseye noble jammy
+DISTS ?= bookworm bullseye jammy noble trixie
 
 VERSION ?= 6.1.1
 
@@ -11,7 +11,7 @@ dockerfile: clean
 
 docker-image:
 	for i in $(DISTS) ; do \
-		docker build -f $$i/Dockerfile -t kamailio-$$i:$(VERSION) -t kamailio-$(VERSION):$$i; \
+		docker build -f $$i/Dockerfile -t kamailio:$$i-$(VERSION) -t kamailio:$(VERSION)-$$i; \
 	done
 
 clean:
