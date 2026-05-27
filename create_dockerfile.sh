@@ -103,8 +103,9 @@ case ${dist} in
 esac
 
 case ${dist} in
-  bookworm|trixie) apt_key=false ;;
-  *) apt_key=true
+  focal|bionic|xenial|trusty|precise) apt_key=true ;;
+  squeeze|wheezy|jessie|stretch|buster) apt_key=true ;;
+  *) apt_key=false ;;
 esac
 
 archived=false
