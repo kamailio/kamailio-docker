@@ -117,7 +117,7 @@ case ${dist} in
     ;;
   squeeze|wheezy|jessie|stretch|bullseye)
     archived=true
-    RULE="RUN sed -i -e 's/deb.debian.org/archive.debian.org/g' -e '/security.debian.org/d' -e '/${dist}-updates/d' /etc/apt/sources.list"
+    RULE="RUN sed -i -e 's/deb.debian.org/archive.debian.org/g' -e '/security.debian.org/d' -e '/${dist}-security/d' -e '/${dist}-updates/d' /etc/apt/sources.list"
     ;;
 esac
 
