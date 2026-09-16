@@ -8,7 +8,7 @@ LABEL org.opencontainers.image.authors="Victor Seva <linuxmaniac@torreviejawirel
 # old cached versions when the Dockerfile is built.
 ENV REFRESHED_AT=2026-09-16
 # fix repositories
-RUN sed -i -e 's/deb.debian.org/archive.debian.org/g' -e '/security.debian.org/d' -e '/bullseye-updates/d' /etc/apt/sources.list
+RUN sed -i -e 's/deb.debian.org/archive.debian.org/g' -e '/security.debian.org/d' -e '/bullseye-security/d' -e '/bullseye-updates/d' /etc/apt/sources.list
 RUN apt-get update &&   DEBIAN_FRONTEND=noninteractive apt-get install -qq --assume-yes gnupg wget &&   apt-get clean && rm -rf /var/lib/apt/lists/*
 # kamailio repo
 RUN echo "deb https://deb-archive.kamailio.org/repos/kamailio-6.0.8 bullseye main" >   /etc/apt/sources.list.d/kamailio.list
