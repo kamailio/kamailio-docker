@@ -1,4 +1,4 @@
-FROM debian:bullseye
+FROM debian/eol:bullseye
 
 LABEL org.opencontainers.image.authors="Victor Seva <linuxmaniac@torreviejawireless.org>"
 
@@ -6,8 +6,10 @@ LABEL org.opencontainers.image.authors="Victor Seva <linuxmaniac@torreviejawirel
 # is updated with the current date. It will force refresh of all
 # of the base images and things like 'apt-get update' won't be using
 # old cached versions when the Dockerfile is built.
-ENV REFRESHED_AT=2026-10-15
-RUN rm -rf /var/lib/apt/lists/* && apt-get update &&   DEBIAN_FRONTEND=noninteractive apt-get install -qq --assume-yes gnupg wget apt-transport-https
+ENV REFRESHED_AT=2026-11-17
+# fix repositories
+RUN sed -i -e 's/deb.debian.org/archive.debian.org/g' -e '/security.debian.org/d' -e '/bullseye-updates/d' /etc/apt/sources.list
+RUN apt-get update &&   DEBIAN_FRONTEND=noninteractive apt-get install -qq --assume-yes gnupg wget &&   apt-get clean && rm -rf /var/lib/apt/lists/*
 # kamailio repo
 RUN echo "deb https://deb-archive.kamailio.org/repos/kamailio-6.1.5 bullseye main" >   /etc/apt/sources.list.d/kamailio.list
 RUN wget -O /tmp/kamailiodebkey.gpg https://deb.kamailio.org/kamailiodebkey.gpg &&   gpg --output /etc/apt/trusted.gpg.d/deb-kamailio-org.gpg --dearmor /tmp/kamailiodebkey.gpg
