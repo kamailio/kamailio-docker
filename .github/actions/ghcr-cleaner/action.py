@@ -198,8 +198,8 @@ class Version:
     def get_deps(self) -> list[str]:
         """Return list of untagged images that this version depends on."""
         if self.tags:
-            manifest = self.pkg.registry.get_manifest(self.digest)
-            manifest = json.loads(manifest)
+            manifest_str, _ = self.pkg.registry.get_manifest_and_response(self.digest)
+            manifest = json.loads(manifest_str)
             return [arch["digest"] for arch in manifest.get("manifests", [])]
         else:
             return []
