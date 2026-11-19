@@ -56,9 +56,12 @@ runs:
   steps:
     - uses: actions/setup-python@v7
 
-    - name: Install dependencies
-      run: pip install -r ${{ github.action_path }}/requirements.txt
+    - name: Create venv and install dependencies
       shell: bash
+      run: |
+        python3 -m venv .venv
+        source .venv/bin/activate
+        pip3 install -r ${{ github.action_path }}/requirements.txt
 
     - name: Run registry cleaner
       shell: bash
@@ -75,4 +78,5 @@ runs:
         args+="--skip-tags ${{ inputs.skip-tags }} "
         
         echo "args: $args"
-        python ${{ github.action_path }}/action.py $args
+        source .venv/bin/activate
+        python3 ${{ github.action_path }}/action.py $args
